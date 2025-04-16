@@ -74,7 +74,7 @@ class _MainScreenViewState extends State<MainScreenView> {
         'progressValue': 0.6
       },
       {
-        'title': 'The Emerald Forest',
+        'title': 'The Emerald Forest dos dias comprido para testes estranhos',
         'progress': 10,
         'image': 'assets/images/banner_image_1.jpg',
         'progressValue': 0.1
@@ -280,85 +280,101 @@ class _MainScreenViewState extends State<MainScreenView> {
       ),
     );
   }
+}
 
-  // Widget para os cards de aventura
-  Widget _buildAdventureCard(
-    BuildContext context, {
-    required String title,
-    required String imagePath,
-    required double progressValue,
-    required int progress,
-    required VoidCallback onContinue,
-  }) {
-    const shade = 0.4;
-    return Container(
-      width: 240,
-      height: 180, // Altura fixa para manter consistência
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.0),
-        boxShadow: [
-          BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3)),
-        ],
-      ),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          // Imagem de fundo
-          ClipRRect(
+// Widget para os cards de aventura
+Widget _buildAdventureCard(
+  BuildContext context, {
+  required String title,
+  required String imagePath,
+  required double progressValue,
+  required int progress,
+  required VoidCallback onContinue,
+}) {
+  const shade = 0.4;
+  return Container(
+    width: 288,
+    height: 132, // Altura fixa para manter consistência (126 + 6)
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(12.0),
+      boxShadow: [
+        BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3)),
+      ],
+    ),
+    child: Stack(
+      fit: StackFit.expand,
+      children: [
+        // Imagem de fundo
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12.0),
+          child: Image.asset(imagePath, fit: BoxFit.cover),
+        ),
+        // Sombreamento escuro
+        Container(
+          decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12.0),
-            child: Image.asset(imagePath, fit: BoxFit.cover),
+            color: Colors.black.withOpacity(shade),
           ),
-          // Sombreamento escuro
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12.0),
-              color: Colors.black.withOpacity(shade),
-            ),
-          ),
-          // Conteúdo do card
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                ),
-                const SizedBox(height: 8),
-                LinearProgressIndicator(
-                  value: progressValue,
-                  backgroundColor: Colors.grey.shade300,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blue.shade300),
-                  minHeight: 8,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  '$progress% complete',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.white70,
-                      ),
-                ),
-                const Spacer(),
-                Align(
-                  alignment: Alignment.bottomRight,
+        ),
+        // Conteúdo do card
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+              const SizedBox(height: 8),
+              Stack(
+                alignment: Alignment.centerLeft,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(17),
+                    child: LinearProgressIndicator(
+                      value: progressValue,
+                      backgroundColor: Colors.grey.shade300,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.blue.shade300),
+                      minHeight: 17.0,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                    child: Text(
+                      '$progress% uncovered',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.only(top: 15),
+                child: Center(
                   child: ElevatedButton(
                     onPressed: onContinue,
                     child: const Text('Continue'),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
 }
+
 
 /// ScenarioCard: Cartão fixo que exibe descrição completa e botão Start sempre.
 class ScenarioCard extends StatelessWidget {
@@ -413,6 +429,17 @@ class ScenarioCard extends StatelessWidget {
 }
 
 // === DOCUMENTAÇÃO ===
+// [ID: 006] 16/04/2025 - Ajustes nos cards de Ongoing Adventures
+// - Aumento da largura em 20% (240 → 288)
+// - Altura ajustada (180 → 126 → 132)
+// - Alinhamento do texto de progresso à esquerda
+// - Mudança da cor do texto de progresso para preto
+// - Bordas arredondadas na barra de progresso
+// - Centralização vertical do texto na barra
+// - Botão "Continue" abaixado em 15px
+// - Grossura da barra aumentada (12 → 13.2 → 23.2)
+// - Overflow com "..." para títulos longos
+// - Ajustes de espaçamento interno
 // [ID: 005] 16/04/2025 - Cada widget controla sua própria altura
 // - Ongoing Adventures: substituído SizedBox/SliverToBoxAdapter por SingleChildScrollView+Row
 // - Available Scenarios: substituído SliverGrid por Wrap para altura dinâmica
